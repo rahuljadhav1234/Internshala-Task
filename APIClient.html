@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Customer Management App</title>
+</head>
+
+<body>
+
+    <h2>Login Screen</h2>
+    <form>
+        <label for="login_id">Login ID:</label>
+        <input type="text" id="login_id" name="login_id" required><br><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+        <button type="button" onclick="authenticateUser()">Login</button>
+    </form>
+    <table id="customerList">
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Street</th>
+            <th>City</th>
+            <th>Email</th>
+            <th>Address</th>
+            <th>State</th>
+            <th>Phone</th>
+            <th>Action</th>
+            <button type="button" onclick="createNewCustomer()">Create a new customer</button>
+    </form>
+        </tr>
+    </table>
+
+    <h2>Add a new customer</h2>
+    <form id="addCustomerForm">
+        <label for="first_name">First Name:</label>
+        <input type="text" id="first_name" name="first_name" required><br><br>
+        <label for="last_name">Last Name:</label>
+        <input type="text" id="last_name" name="last_name" required><br><br>
+        <label for="street">Street:</label>
+        <input type="text" id="street" name="street" required><br><br>
+        <label for="city">City:</label>
+        <input type="text" id="city" name="city" required><br><br>
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email" required><br><br>
+        <label for="address">Address:</label>
+        <input type="text" id="address" name="address" required><br><br>
+        <label for="state">State:</label>
+        <input type="text" id="state" name="state" required><br><br>
+        <label for="phone">Phone:</label>
+        <input type="text" id="phone" name="phone" required><br><br>
+        <button type="button" onclick="createNewCustomer()">Create a new customer</button>
+    </form>
+
+    <script>
+                // Other code remains unchanged
+
+                function authenticateUser() {
+            const url = 'https://qa2.sunbasedata.com/sunbase/portal/api/assignment_auth.jsp';
+            const data = {
+                login_id: 'test@sunbasedata.com',
+                password: 'Test@123'
+            };
+
+            fetch(url, {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Authentication failed');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Successful authentication logic here
+                    console.log('Authentication successful. Bearer token:', data.access_token);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        // Call the authentication function to start the process
+        authenticateUser();
+        const customerData = [
+            {
+                first_name: "Shar",
+                last_name: "Sherma",
+                street: "gmail.com",
+                address: "10258"
+            },
+            {
+                first_name: "som",
+                last_name: "gmail.com",
+                street: "10232"
+            },
+            {
+                first_name: "sa",
+                last_name: "gmail.com",
+                street: "10267"
+            },
+            {
+                first_name: "com",
+                last_name: "gmail.com",
+                street: "0244"
+            }
+        ];
+
+        const customerListTable = document.getElementById("customerList");
+        customerData.forEach((customer) => {
+            const newRow = customerListTable.insertRow(-1);
+            const firstNameCell = newRow.insertCell(0);
+            const lastNameCell = newRow.insertCell(1);
+            const streetCell = newRow.insertCell(2);
+            const citycell = newRow.insertCell(3);
+            const emailCell = newRow.insertCell(4);
+            const addressCell = newRow.insertCell(5);
+            const stateCell=newRow.insertCell(6);
+            const phoneCell=newRow.insertCell(7)
+            const actionCell = newRow.insertCell(8);
+
+            firstNameCell.innerHTML = customer.first_name;
+            lastNameCell.innerHTML = customer.last_name;
+            streetCell.innerHTML = customer.street;
+            citycell.innerHTML = customer.city;
+            emailCell.innerHTML = customer.email;
+            addressCell.innerHTML = customer.address;
+            stateCell.innerHTML = customer.state;
+            phoneCell.innerHTML = customer.email;
+            actionCell.innerHTML = ' <button onclick="deleteCustomer(this.parentNode.parentNode)">Delete</button>' +
+                ' <button onclick="editCustomer(this.parentNode.parentNode)">Edit</button>';
+        });
+
+        function createNewCustomer(e) {
+            console.log(e.target.value);
+            const firstName = document.getElementById('first_name').value;
+            const lastName = document.getElementById('last_name').value;
+            const street = document.getElementById('Street').value;
+            const city = document.getElementById('city').value;
+            const email = document.getElementById('email').value;
+            const address = document.getElementById('Address').value;
+            const state = document.getElementById('state').value;
+            const phone = document.getElementById('phone').value;
+
+            const newRow = customerListTable.insertRow(-1);
+            const firstNameCell = newRow.insertCell(0);
+            const lastNameCell = newRow.insertCell(1);
+            const streetCell = newRow.insertCell(2);
+            const citycell = newRow.insertCell(3);
+            const emailCell = newRow.insertCell(4);
+            const addressCell = newRow.insertCell(5);
+            const stateCell = newRow.insertCell(6);
+            const phoneCell = newRow.insertCell(7);
+            const actionCell = newRow.insertCell(8);
+
+            firstNameCell.innerHTML = firstName;
+            lastNameCell.innerHTML = lastName;
+            streetCell.innerHTML=street;
+            citycell.innerHTML=city;
+            emailCell.innerHTML = email;
+            addressCell.innerHTML = address;
+            stateCell.innerHTML = state;
+            phoneCell.innerHTML = phone;
+            actionCell.innerHTML = ' <button onclick="deleteCustomer(this.parentNode.parentNode)">Delete</button>' +
+                ' <button onclick="editCustomer(this.parentNode.parentNode)">Edit</button>';
+        }
+
+        function deleteCustomer(row) {
+            const index = row.rowIndex;
+            document.getElementById("customerList").deleteRow(index);
+        }
+
+        function editCustomer(row) {
+            const cells = row.cells;
+            const firstName = cells[0].innerHTML;
+            const lastName = cells[1].innerHTML;
+            const street = cells[2].innerHTML;
+            const city = cells[2].innerHTML;
+            const email = cells[3].innerHTML;
+            const address = cells[2].innerHTML;
+            const state = cells[2].innerHTML;
+            const phone = cells[4].innerHTML;
+
+            document.getElementById('first_name').value = firstName;
+            document.getElementById('last_name').value = lastName;
+            document.getElementById('street').value = street;
+            document.getElementById('city').value = city;
+            document.getElementById('email').value = email;
+            document.getElementById('address').value = address;
+            document.getElementById('state').value = state;
+            document.getElementById('phone').value = phone;
+        }
+    </script>
+</body>
+
+</html
